@@ -1,45 +1,50 @@
-function showTab(id) {
-  document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
+async function generateEmail() {
+  const text = document.getElementById("inputText").value;
+  const prompt = `以下の会議内容をもとに、相手に送る日本語のビジネスメールを作成してください：\n${text}`;
 
-async function callAPI(prompt, outputId) {
   const res = await fetch("/api/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ prompt })
   });
+
   const data = await res.json();
-  document.getElementById(outputId).textContent =
+  document.getElementById("output").textContent =
     data.choices?.[0]?.message?.content || "エラーが発生しました。";
 }
 
-function generateEmail() {
-  const text = document.getElementById("mailInput").value;
-  const prompt = `以下の会議内容をもとに、相手に送る日本語のビジネスメールを作成してください：\n${text}`;
-  callAPI(prompt, "mailOutput");
+async function generateCalendarText() {
+  const text = document.getElementById("inputText").value;
+  const prompt = `以下の会議内容から、カレンダーに追加できる予定（タイトル・日時）を抽出してください。形式は「タイトル：〇〇」「日時：〇〇」の2行で記載してください。\n${text}`;
+
+  const res = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ prompt })
+  });
+
+  const data = await res.json();
+  document.getElementById("output").textContent =
+    data.choices?.[0]?.message?.content || "エラーが発生しました。";
 }
 
-function generateSummary() {
-  const text = document.getElementById("summaryInput").value;
-  const prompt = `以下の会議内容を要点を簡潔にまとめてください：\n${text}`;
-  callAPI(prompt, "summaryOutput");
-}
+function saveToCalendar() {
+  const output = document.getElementById("output").textContent;
+  const lines = output.split("\n");
+  let title = "予定";
+  let start = "";
 
-function generateToDo() {
-  const text = document.getElementById("todoInput").value;
-  const prompt = `以下の会議内容から、やるべきタスクやToDoを箇条書きで抽出してください：\n${text}`;
-  callAPI(prompt, "todoOutput");
-}
+  for (const line of lines) {
+    if (line.includes("タイトル：")) title = line.replace("タイトル：", "").trim();
+    if (line.includes("日時：")) start = line.replace("日時：", "").trim();
+  }
 
-function generateReport() {
-  const text = document.getElementById("reportInput").value;
-  const prompt = `以下の業務内容をもとに、上司に提出する日報の文章を作成してください：\n${text}`;
-  callAPI(prompt, "reportOutput");
-}
-
-function generateCalendar() {
-  const text = document.getElementById("calendarInput").value;
-  const prompt = `以下の会議内容をもとに、Googleカレンダーに貼り付ける用の予定説明文を作成してください。目的・参加者・概要などを含めて：\n${text}`;
-  callAPI(prompt, "calendarOutput");
+  if (title && start) {
+    const events = JSON.parse(localStorage.getItem("calendar_events") || "[]");
+    events.push({ title, start });
+    localStorage.setItem("calendar_events", JSON.stringify(events));
+    alert("✅ カレンダーに追加しました！");
+  } else {
+    alert("⚠️ カレンダーに追加できる形式ではありません。");
+  }
 }
