@@ -2,75 +2,108 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <title>📅 カレンダー</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>カレンダーAI</title>
-  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css' rel='stylesheet' />
-  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js'></script>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
   <style>
     body {
+      font-family: "Helvetica Neue", sans-serif;
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #121212;
-      color: #e0e0e0;
+      background-color: #121212;
+      color: #fff;
+      display: flex;
     }
 
+    /* サイドバー */
     .sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 160px;
-      height: 100%;
-      background-color: #1a1a1a;
-      padding-top: 20px;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+      width: 200px;
+      background-color: #1e1e1e;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+      height: 100vh;
+    }
+
+    .sidebar h2 {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+      color: #ffffff;
     }
 
     .sidebar a {
       display: block;
-      color: #e0e0e0;
-      padding: 12px 16px;
+      color: #ccc;
       text-decoration: none;
-      font-weight: bold;
+      margin-bottom: 10px;
+      padding: 8px;
+      border-radius: 4px;
     }
 
     .sidebar a:hover {
       background-color: #333;
+      color: #fff;
     }
 
+    /* メインコンテンツ */
     .main {
-      margin-left: 180px;
+      flex: 1;
       padding: 20px;
+      background-color: #181818;
     }
 
     #calendar {
-      background: #1e1e1e;
-      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      padding: 10px;
       border-radius: 8px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #fff;
     }
   </style>
 </head>
 <body>
+
+  <!-- サイドバー -->
   <div class="sidebar">
-    <a href="index.html">🧠 議事録生成</a>
+    <h2>📂 メニュー</h2>
+    <a href="index.html">🧠 議事録→メール</a>
     <a href="calendar.html">📅 カレンダー</a>
-    <!-- 今後の機能追加時はここに追加 -->
+    <!-- 今後の機能もここに追加 -->
   </div>
 
+  <!-- メイン -->
   <div class="main">
     <h1>📅 カレンダー</h1>
-    <div id='calendar'></div>
+    <div id="calendar"></div>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const calendarEl = document.getElementById('calendar');
+
+      // ローカルストレージから予定取得
+      let storedEvents = JSON.parse(localStorage.getItem("calendar_events") || "[]");
+
       const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         height: 'auto',
-        events: JSON.parse(localStorage.getItem("calendar_events") || "[]")
+        locale: 'ja',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: storedEvents,
+        eventColor: '#0070f3'
       });
+
       calendar.render();
     });
   </script>
+
 </body>
 </html>
