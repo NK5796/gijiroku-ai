@@ -3,15 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>議事録→メール生成AI</title>
+  <title>議事録AIツール</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>🧠 議事録→メール文 自動生成AI</h1>
-    <textarea id="inputText" placeholder="ここに会議内容を入力してください..."></textarea>
-    <button onclick="generateEmail()">メール文生成</button>
-    <div id="output">出力結果がここに表示されます</div>
+    <h1>🧠 議事録AIツール</h1>
+    <div class="menu">
+      <button onclick="showTab('mail')">📧 メール生成</button>
+      <button onclick="showTab('summary')">📝 要約生成</button>
+    </div>
+
+    <div id="mail" class="tab active">
+      <textarea id="mailInput" placeholder="ここに会議内容を入力してください..."></textarea>
+      <button onclick="generateEmail()">メール文生成</button>
+      <div id="mailOutput">出力結果がここに表示されます</div>
+    </div>
+
+    <div id="summary" class="tab">
+      <textarea id="summaryInput" placeholder="ここに会議内容を入力してください..."></textarea>
+      <button onclick="generateSummary()">要点抽出</button>
+      <div id="summaryOutput">出力結果がここに表示されます</div>
+    </div>
   </div>
   <script src="main.js"></script>
 </body>
