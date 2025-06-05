@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>議事録→メール生成AI</title>
+  <style>
+    body { font-family: sans-serif; background: #f5f5f5; padding: 20px; max-width: 800px; margin: auto; }
+    textarea { width: 100%; height: 160px; padding: 10px; font-size: 16px; }
+    button { margin-top: 10px; padding: 10px 20px; font-size: 16px; }
+    #output { background: white; padding: 15px; margin-top: 20px; white-space: pre-wrap; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h1>🧠 議事録→メール文 自動生成AI</h1>
+  <textarea id="inputText" placeholder="ここに会議内容を入力"></textarea><br>
+  <button onclick="generateEmail()">メール文生成</button>
+  <div id="output">出力結果がここに表示されます</div>
+
+  <script>
+    async function generateEmail() {
+      const text = document.getElementById("inputText").value;
+      const prompt = `以下の会議内容をもとに、相手に送る日本語のビジネスメールを作成してください：\n${text}`;
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt })
+      });
+      const data = await res.json();
+      document.getElementById("output").textContent = data.choices?.[0]?.message?.content || "エラーが発生しました。";
+    }
+  </script>
+</body>
+</html>
