@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>議事録AIツール</title>
+  <title>議事録AIツール（拡張版）</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,6 +12,9 @@
     <div class="menu">
       <button onclick="showTab('mail')">📧 メール生成</button>
       <button onclick="showTab('summary')">📝 要約生成</button>
+      <button onclick="showTab('todo')">✅ ToDo抽出</button>
+      <button onclick="showTab('report')">📄 日報生成</button>
+      <button onclick="showTab('calendar')">📅 カレンダー文生成</button>
     </div>
 
     <div id="mail" class="tab active">
@@ -24,6 +27,24 @@
       <textarea id="summaryInput" placeholder="ここに会議内容を入力してください..."></textarea>
       <button onclick="generateSummary()">要点抽出</button>
       <div id="summaryOutput">出力結果がここに表示されます</div>
+    </div>
+
+    <div id="todo" class="tab">
+      <textarea id="todoInput" placeholder="会議内容からToDoを抽出します..."></textarea>
+      <button onclick="generateToDo()">ToDo抽出</button>
+      <div id="todoOutput">出力結果がここに表示されます</div>
+    </div>
+
+    <div id="report" class="tab">
+      <textarea id="reportInput" placeholder="業務内容や出来事を入力してください..."></textarea>
+      <button onclick="generateReport()">日報生成</button>
+      <div id="reportOutput">出力結果がここに表示されます</div>
+    </div>
+
+    <div id="calendar" class="tab">
+      <textarea id="calendarInput" placeholder="会議内容を入力してください..."></textarea>
+      <button onclick="generateCalendar()">カレンダー用文生成</button>
+      <div id="calendarOutput">出力結果がここに表示されます</div>
     </div>
   </div>
   <script src="main.js"></script>
