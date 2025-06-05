@@ -5,8 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>議事録→メール生成AI</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 160px;
+      height: 100%;
+      background-color: #1a1a1a;
+      padding-top: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+    }
+
+    .sidebar a {
+      display: block;
+      color: #e0e0e0;
+      padding: 12px 16px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .sidebar a:hover {
+      background-color: #333;
+    }
+
+    .container {
+      margin-left: 180px;
+    }
+  </style>
 </head>
 <body>
+  <div class="sidebar">
+    <a href="calendar.html">📅 カレンダーへ</a>
+  </div>
+
   <div class="container">
     <h1>🧠 議事録→メール文 自動生成AI</h1>
     <textarea id="inputText" placeholder="ここに会議内容を入力してください..."></textarea><br>
