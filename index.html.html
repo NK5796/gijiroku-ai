@@ -2,51 +2,72 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>議事録→メール文 自動生成AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>議事録→メール生成AI</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Noto Sans JP', sans-serif;
       background-color: #f8f9fa;
       color: #333;
-      padding: 40px;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .container {
       max-width: 960px;
       margin: auto;
     }
+
     h1 {
       background-color: #003366;
       color: white;
       padding: 20px;
       border-radius: 8px;
-      font-size: 24px;
+      font-size: 20px;
+      text-align: center;
     }
+
     label {
       display: block;
       margin: 20px 0 10px;
       font-weight: bold;
     }
+
     textarea {
       width: 100%;
-      height: 200px;
+      height: 180px;
       padding: 10px;
       font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 6px;
       resize: vertical;
+      box-sizing: border-box;
     }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 10px 0 20px;
+    }
+
     button {
-      padding: 10px 20px;
-      margin: 10px 10px 20px 0;
+      flex: 1;
+      min-width: 150px;
+      padding: 12px;
       background-color: #0056b3;
       color: white;
       border: none;
       border-radius: 6px;
-      cursor: pointer;
       font-size: 16px;
+      cursor: pointer;
     }
+
     button:hover {
       background-color: #003f88;
     }
+
     #output {
       background-color: #fff;
       padding: 20px;
@@ -54,24 +75,32 @@
       border: 1px solid #ddd;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       white-space: pre-wrap;
-      margin-top: 20px;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 18px; padding: 15px; }
+      button { font-size: 15px; padding: 10px; }
+      textarea { height: 160px; }
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h1>🧠 議事録→メール文 自動生成AI</h1>
 
-<h1>🧠 議事録→メール文 自動生成AI</h1>
+    <label for="inputText">📝 会議内容を入力：</label>
+    <textarea id="inputText" placeholder="ここに会議メモを貼り付けてください..."></textarea>
 
-<label for="inputText">📝 会議内容を入力：</label>
-<textarea id="inputText" placeholder="ここに会議メモを貼り付けてください..."></textarea>
+    <div class="button-group">
+      <button onclick="generateSummary()">要点抽出</button>
+      <button onclick="generateEmail()">メール文生成</button>
+    </div>
 
-<button onclick="generateSummary()">要点抽出</button>
-<button onclick="generateEmail()">メール文生成</button>
-
-<div id="output">ここに結果が表示されます</div>
+    <div id="output">ここに結果が表示されます</div>
+  </div>
 
 <script>
-const apiKey = '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'; // ← OpenAIの課金済みAPIキーに差し替えてください
+const apiKey = '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'; // ← OpenAIの課金済みAPIキーを入れてください
 
 async function callChatGPT(prompt) {
   try {
@@ -82,7 +111,7 @@ async function callChatGPT(prompt) {
         "Authorization": `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: "gpt-4", // gpt-3.5-turboでもOK
+        model: "gpt-4", // または "gpt-3.5-turbo"
         messages: [{ role: "user", content: prompt }],
         temperature: 0.4
       })
@@ -94,12 +123,7 @@ async function callChatGPT(prompt) {
     }
 
     const data = await response.json();
-
-    if (!data.choices || !data.choices[0]) {
-      throw new Error("APIの応答に choices[0] が含まれていません。");
-    }
-
-    return data.choices[0].message.content;
+    return data.choices?.[0]?.message?.content ?? "応答形式が不正です。";
 
   } catch (err) {
     console.error("ChatGPT APIエラー:", err);
@@ -132,6 +156,5 @@ ${text}`;
   document.getElementById("output").textContent = result;
 }
 </script>
-
 </body>
 </html>
