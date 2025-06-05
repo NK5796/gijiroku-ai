@@ -2,30 +2,52 @@ async function generateEmail() {
   const text = document.getElementById("inputText").value;
   const prompt = `以下の会議内容をもとに、相手に送る日本語のビジネスメールを作成してください：\n${text}`;
 
-  const res = await fetch("/api/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt })
-  });
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt })
+    });
 
-  const data = await res.json();
-  document.getElementById("output").textContent =
-    data.choices?.[0]?.message?.content || "エラーが発生しました。";
+    if (!res.ok) {
+      const errorText = await res.text();
+      document.getElementById("output").textContent = "⚠️ エラー: " + errorText;
+      return;
+    }
+
+    const data = await res.json();
+    document.getElementById("output").textContent =
+      data.choices?.[0]?.message?.content || "⚠️ レスポンスに内容がありません。";
+
+  } catch (err) {
+    document.getElementById("output").textContent = "⚠️ 通信エラー: " + err.message;
+  }
 }
 
 async function generateCalendarText() {
   const text = document.getElementById("inputText").value;
   const prompt = `以下の会議内容から、カレンダーに追加できる予定（タイトル・日時）を抽出してください。形式は「タイトル：〇〇」「日時：〇〇」の2行で記載してください。\n${text}`;
 
-  const res = await fetch("/api/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt })
-  });
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt })
+    });
 
-  const data = await res.json();
-  document.getElementById("output").textContent =
-    data.choices?.[0]?.message?.content || "エラーが発生しました。";
+    if (!res.ok) {
+      const errorText = await res.text();
+      document.getElementById("output").textContent = "⚠️ エラー: " + errorText;
+      return;
+    }
+
+    const data = await res.json();
+    document.getElementById("output").textContent =
+      data.choices?.[0]?.message?.content || "⚠️ レスポンスに内容がありません。";
+
+  } catch (err) {
+    document.getElementById("output").textContent = "⚠️ 通信エラー: " + err.message;
+  }
 }
 
 function saveToCalendar() {
